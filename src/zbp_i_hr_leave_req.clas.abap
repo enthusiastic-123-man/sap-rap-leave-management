@@ -1,0 +1,5 @@
+CLASS zbp_i_hr_leave_req DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_hr_leave_req.
+ENDCLASS.
+
+CLASS zbp_i_hr_leave_req IMPLEMENTATION.
+ENDCLASS.

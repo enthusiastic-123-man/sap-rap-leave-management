@@ -1,0 +1,98 @@
+managed implementation in class zbp_i_hr_leave_req unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_HR_LEAVE_REQ alias LeaveRequest
+persistent table zhr_leave_req
+draft table zhr_d_leave
+lock master
+total etag LastChangedAt
+authorization master ( instance )
+etag master LastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  // 1. Mandatory key input on creation (Fixes ABP_BEHV_PID error for CHAR 12 keys)
+  field ( mandatory : create )
+  LeaveId;
+
+  // 2. Read-Only fields (Calculated & System fields)
+  field ( readonly )
+  Status,
+  StatusText,
+  StatusCriticality,
+  TotalDays,
+  CreatedBy,
+  CreatedAt,
+  LastChangedBy,
+  LastChangedAt,
+  ApprovalDate;
+
+  // Mandatory fields for creating a request
+  field ( mandatory )
+  EmpId,
+  LeaveType,
+  FromDate,
+  ToDate;
+
+  // Custom Actions with Dynamic Feature Control
+  action ( features : instance ) approveLeave result [1] $self;
+  action ( features : instance ) rejectLeave result [1] $self;
+  action submitLeave result [1] $self;
+  action cancelLeave result [1] $self;
+
+  // Determination for auto-calculating Total Days
+  determination recalculateTotalDays on modify
+  {
+    field FromDate, ToDate;
+  }
+
+  // --- Input Validations ---
+  validation validateDates on save
+  {
+    field FromDate, ToDate;
+    create;
+    update;
+  }
+
+  validation validateReason on save
+  {
+    field Reason;
+    create;
+    update;
+  }
+
+  // Standard Draft Actions
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+
+  draft determine action Prepare
+  {
+    validation validateDates;
+    validation validateReason;
+  }
+
+  // Field Mapping between View Entity and Database Table
+  mapping for zhr_leave_req
+    {
+      LeaveId         = leave_id;
+      EmpId           = emp_id;
+      LeaveType       = leave_type;
+      FromDate        = from_date;
+      ToDate          = to_date;
+      TotalDays       = total_days;
+      Reason          = reason;
+      Status          = status;
+      ApproverId      = approver_id;
+      ApprovalComment = approval_comment;
+      ApprovalDate    = approval_date;
+      CreatedBy       = created_by;
+      CreatedAt       = created_at;
+      LastChangedBy   = last_changed_by;
+      LastChangedAt   = last_changed_at;
+    }
+}

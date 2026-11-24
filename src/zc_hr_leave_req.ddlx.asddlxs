@@ -1,0 +1,148 @@
+@Metadata.layer: #CUSTOMER
+@UI.headerInfo: {
+  typeName: 'Leave Request',
+  typeNamePlural: 'Leave Requests',
+  title: { type: #STANDARD, value: 'LeaveId' },
+  description: { type: #STANDARD, value: 'Reason' }
+}
+annotate view ZC_HR_LEAVE_REQ with
+{
+  @UI.facet: [
+    /* --- TOP KPI HEADER CARDS (ACTIVE) --- */
+    {
+      id: 'HeaderStatus',
+      purpose: #HEADER,
+      type: #DATAPOINT_REFERENCE,
+      position: 10,
+      targetQualifier: 'StatusDataPoint'
+    },
+    {
+      id: 'HeaderTotalDays',
+      purpose: #HEADER,
+      type: #DATAPOINT_REFERENCE,
+      position: 20,
+      targetQualifier: 'DaysDataPoint'
+    },
+    /* --- MAIN BODY SECTIONS --- */
+    {
+      id: 'LeaveDetails',
+      purpose: #STANDARD,
+      type: #COLLECTION,
+      position: 10,
+      label: 'Leave Request Details'
+    },
+    {
+      id: 'GeneralInfo',
+      purpose: #STANDARD,
+      type: #FIELDGROUP_REFERENCE,
+      parentId: 'LeaveDetails',
+      position: 10,
+      label: 'General Information',
+      targetQualifier: 'General'
+    },
+    {
+      id: 'ApprovalInfo',
+      purpose: #STANDARD,
+      type: #FIELDGROUP_REFERENCE,
+      parentId: 'LeaveDetails',
+      position: 20,
+      label: 'Approval Information',
+      targetQualifier: 'Approval'
+    }
+  ]
+
+  // --- GENERAL FIELDS ---
+  @UI.selectionField: [{ position: 10 }]
+  @UI.lineItem: [{ position: 10, importance: #HIGH, label: 'Leave ID' }]
+  @UI.fieldGroup: [{ qualifier: 'General', position: 10, label: 'Leave ID' }]
+  @EndUserText.label: 'Leave ID'
+  LeaveId;
+
+  @UI.selectionField: [{ position: 20 }]
+  @UI.lineItem: [{ position: 20, importance: #HIGH, label: 'Employee ID' }]
+  @UI.fieldGroup: [{ qualifier: 'General', position: 20, label: 'Employee ID' }]
+  @EndUserText.label: 'Employee ID'
+  EmpId;
+
+  @UI.selectionField: [{ position: 30 }]
+  @UI.lineItem: [{ position: 30, importance: #HIGH, label: 'Leave Type' }]
+  @UI.fieldGroup: [{ qualifier: 'General', position: 30, label: 'Leave Type' }]
+  @EndUserText.label: 'Leave Type'
+  LeaveType;
+
+  @UI.lineItem: [{ position: 40, importance: #MEDIUM, label: 'From Date' }]
+  @UI.fieldGroup: [{ qualifier: 'General', position: 40, label: 'From Date' }]
+  @EndUserText.label: 'From Date'
+  FromDate;
+
+  @UI.lineItem: [{ position: 50, importance: #MEDIUM, label: 'To Date' }]
+  @UI.fieldGroup: [{ qualifier: 'General', position: 50, label: 'To Date' }]
+  @EndUserText.label: 'To Date'
+  ToDate;
+
+  // --- DATAPOINT & LINE ITEM FOR TOTAL DAYS ---
+  @UI.dataPoint: {
+    qualifier: 'DaysDataPoint',
+    title: 'Total Duration (Days)'
+  }
+  @UI.lineItem: [{ position: 60, importance: #HIGH, label: 'Total Days' }]
+  @UI.fieldGroup: [{ qualifier: 'General', position: 60, label: 'Total Days' }]
+  @EndUserText.label: 'Total Days'
+  TotalDays;
+
+  // --- DATAPOINT & LINE ITEM FOR STATUS ---
+  @UI.dataPoint: {
+    qualifier: 'StatusDataPoint',
+    title: 'Approval Status',
+    criticality: 'StatusCriticality'
+  }
+  @UI.selectionField: [{ position: 40 }]
+  @UI.lineItem: [
+    {
+      position: 70,
+      importance: #HIGH,
+      label: 'Status',
+      criticality: 'StatusCriticality',
+      criticalityRepresentation: #WITHOUT_ICON
+    },
+    {
+      type: #FOR_ACTION,
+      dataAction: 'approveLeave',
+      label: 'Approve Leave',
+      position: 10
+    },
+    {
+      type: #FOR_ACTION,
+      dataAction: 'rejectLeave',
+      label: 'Reject Leave',
+      position: 20
+    }
+  ]
+  @UI.fieldGroup: [
+    {
+      qualifier: 'General',
+      position: 70,
+      label: 'Status',
+      criticality: 'StatusCriticality'
+    }
+  ]
+  @EndUserText.label: 'Status'
+  Status;
+
+  @UI.fieldGroup: [{ qualifier: 'General', position: 80, label: 'Reason' }]
+  @EndUserText.label: 'Reason'
+  Reason;
+
+  // --- APPROVAL FIELDS ---
+  @UI.fieldGroup: [{ qualifier: 'Approval', position: 10, label: 'Approver ID' }]
+  @EndUserText.label: 'Approver ID'
+  ApproverId;
+
+  @UI.fieldGroup: [{ qualifier: 'Approval', position: 20, label: 'Approval Comment' }]
+  @EndUserText.label: 'Approval Comment'
+  ApprovalComment;
+
+  @UI.fieldGroup: [{ qualifier: 'Approval', position: 30, label: 'Approval Date' }]
+  @EndUserText.label: 'Approval Date'
+  ApprovalDate;
+}

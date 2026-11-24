@@ -1,0 +1,7 @@
+@EndUserText.label: 'Leave Request OData V4 Service Definition'
+define service ZUI_HR_LEAVE_REQ_O4 {
+  expose ZC_HR_LEAVE_REQ     as LeaveRequest;
+  expose ZI_HR_LVEMP_VH      as EmployeeVH;
+  expose ZI_HR_LEAVE_TYPE_VH as LeaveTypeVH;
+  expose ZI_HR_LEAVE_BALANCE as LeaveBalance;
+}
